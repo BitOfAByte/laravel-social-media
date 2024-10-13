@@ -7,6 +7,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>FUCK</h1>
+    <h1>Test page lol</h1>
 </body>
 </html>

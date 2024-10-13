@@ -7,6 +7,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/test', function () {
+    return view('test');
+});
+
 Route::get('register', action: [AuthController::class, 'register'])->name('register');
 Route::get('login', [AuthController::class, 'index'])->name('login');
 
