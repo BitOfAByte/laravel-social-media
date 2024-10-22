@@ -14,7 +14,7 @@ Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-
+Route::get('/search-user', [UserController::class, 'search'])->name('search.user');
 # posts
 
 Route::middleware([AuthCheck::class])->group(function(){

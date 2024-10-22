@@ -12,8 +12,10 @@
     <div class="container mx-auto px-4 py-2 flex items-center justify-between">
         <a href="{{ route('home') }}" class="text-red-500 text-3xl font-bold">redditlike</a>
         <div class="relative">
-            <input type="text" placeholder="Search Redditlike" class="bg-gray-100 rounded-full py-1 px-4 w-64">
-            <i class="fas fa-search absolute right-3 top-2 text-gray-400"></i>
+            <form action="{{ route('search.user') }}" method="GET">
+                <input type="text" name="query" placeholder="Search for a user" class="bg-gray-100 rounded-full py-1 px-4 w-64">
+                <button type="submit" class="absolute right-3 top-2 text-gray-400"><i class="fas fa-search"></i></button>
+            </form>
         </div>
         <div>
             @auth

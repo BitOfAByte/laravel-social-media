@@ -5,21 +5,27 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller {
-    public function index() {
+class UserController extends Controller
+{
+    public function index()
+    {
         $users = User::all();
         return view('users.index', compact('users'));
     }
-    public function show($id) {
+
+    public function show($id)
+    {
         $user = User::query();
         return view('users.show', compact('user'));
     }
 
-    public function create() {
+    public function create()
+    {
         return view('users.create');
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
 
     }
 
@@ -53,11 +59,11 @@ class UserController extends Controller {
             $user->password = Hash::make($request->password);
         }
 
-        if($request->filled('email')) {
+        if ($request->filled('email')) {
             $user->email = $request->email;
         }
 
-        if($request->filled('username')) {
+        if ($request->filled('username')) {
             $user->username = $request->username;
         }
 
@@ -76,5 +82,13 @@ class UserController extends Controller {
         }
 
         return redirect()->route('users.index')->with('error', 'User not found.');
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $users = User::where('username', 'LIKE', "%{$query}%")->get();
+
+        return view('search', compact('users'));
     }
 }
