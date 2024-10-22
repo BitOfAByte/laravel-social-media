@@ -11,7 +11,7 @@ class User extends Model implements Authenticatable
 {
     use HasFactory, Notifiable;
 
-    // ... (previous code remains the same)
+    protected $fillable = ['username','email','password'];
 
     /**
      * Get the name of the unique identifier for the user.
