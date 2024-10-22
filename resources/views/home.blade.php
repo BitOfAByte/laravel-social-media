@@ -36,16 +36,16 @@
             <div class="bg-white rounded-md shadow-md mb-4 flex">
                 <div class="w-10 bg-gray-100 rounded-l-md flex flex-col items-center py-2">
                     <button class="text-gray-400 hover:text-red-500"><i class="fas fa-arrow-up"></i></button>
-                    <span class="text-sm font-bold my-1">{{ $post['upvotes'] }}</span>
+                    <span class="text-sm font-bold my-1">{{ $post->upvotes }}</span>
                     <button class="text-gray-400 hover:text-blue-500"><i class="fas fa-arrow-down"></i></button>
                 </div>
                 <div class="p-4 flex-grow">
                     <div class="text-xs text-gray-500 mb-1">
-                        Posted by {{ $post['author'] }} in {{ $post['subreddit'] }} {{ $post['time'] }}
+                        Posted by {{ $post->user->username }} {{ $post->created_at->diffForHumans() }}
                     </div>
-                    <h2 class="text-lg font-semibold mb-2">{{ $post['title'] }}</h2>
+                    <h2 class="text-lg font-semibold mb-2">{{ $post->title }}</h2>
                     <div class="text-sm text-gray-500">
-                        <span class="mr-4"><i class="far fa-comment"></i> {{ $post['comments'] }} comments</span>
+                        <span class="mr-4"><i class="far fa-comment"></i> {{ $post->comments }} comments</span>
                         <span class="mr-4"><i class="fas fa-share"></i> Share</span>
                         <span><i class="far fa-bookmark"></i> Save</span>
                     </div>
