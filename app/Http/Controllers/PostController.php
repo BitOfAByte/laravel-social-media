@@ -28,7 +28,7 @@ class PostController extends Controller
 
         Post::create([
             'title' => $request->title,
-            'content' => $request->content,
+            'content' => $request->input('content'),
             'user_id' => Auth::id(),
         ]);
 

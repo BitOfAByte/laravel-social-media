@@ -13,6 +13,11 @@ class UserController extends Controller
         return view('users.index', compact('users'));
     }
 
+    public function profile($username) {
+        $user = User::where('username', $username)->firstOrFail();
+        return view('users.profile', compact('user'));
+    }
+
     public function show($id)
     {
         $user = User::query();
@@ -37,7 +42,7 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('error', 'User not found.');
         }
 
-        return view('users.edit', compact('user'));
+        return view('home', compact('user'));
     }
 
 
@@ -46,7 +51,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return redirect()->route('users.index')->with('error', 'User not found.');
+            return redirect()->route('home')->with('error', 'User not found.');
         }
 
         $request->validate([
@@ -69,7 +74,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('home')->with('success', 'User updated successfully.');
     }
 
     public function destroy($id)
@@ -78,10 +83,10 @@ class UserController extends Controller
 
         if ($user) {
             $user->delete();
-            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+            return redirect()->route('home')->with('success', 'User deleted successfully.');
         }
 
-        return redirect()->route('users.index')->with('error', 'User not found.');
+        return redirect()->route('home')->with('error', 'User not found.');
     }
 
     public function search(Request $request)

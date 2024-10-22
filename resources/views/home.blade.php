@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redditlike</title>
+    <title>SocialConnect</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-200">
 <nav class="bg-white border-b border-gray-300">
     <div class="container mx-auto px-4 py-2 flex items-center justify-between">
-        <a href="{{ route('home') }}" class="text-red-500 text-3xl font-bold">redditlike</a>
+        <a href="{{ route('home') }}" class="text-red-500 text-3xl font-bold">SocialConnect</a>
         <div class="relative">
             <form action="{{ route('search.user') }}" method="GET">
                 <input type="text" name="query" placeholder="Search for a user" class="bg-gray-100 rounded-full py-1 px-4 w-64">
                 <button type="submit" class="absolute right-3 top-2 text-gray-400"><i class="fas fa-search"></i></button>
             </form>
         </div>
-        <div>
+        <div class="flex items-center">
             @auth
                 <span class="mr-4">Welcome, {{ Auth::user()->username }}</span>
+                <img src="{{ Auth::user()->profile_picture }}" alt="Profile Picture" class="w-8 h-8 rounded-full mr-2">
+                <a href="{{ route('user.profile', ['username' => Auth::user()->username]) }}" class="bg-green-500 text-white px-4 py-1 rounded-full hover:bg-green-600 mr-2">Profile</a>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="bg-blue-500 text-white px-4 py-1 rounded-full hover:bg-blue-600">Log Out</button>
@@ -31,7 +33,6 @@
         </div>
     </div>
 </nav>
-
 <main class="container mx-auto mt-8 flex">
     <div class="w-2/3 pr-4">
         @foreach ($posts as $post)
@@ -58,11 +59,11 @@
     <div class="w-1/3 pl-4">
         <div class="bg-white rounded-md shadow-md p-4 mb-4">
             <h2 class="text-lg font-semibold mb-2">About Community</h2>
-            <p class="text-sm mb-4">Welcome to Redditlike, a place to share and discuss interesting topics!</p>
-            <button class="bg-blue-500 text-white w-full py-1 rounded-full hover:bg-blue-600">Create Post</button>
+            <p class="text-sm mb-4">Welcome to SocialConnect, a place to share and discuss interesting topics!</p>
+            <button onclick="window.location.href='{{ route('posts.create') }}'" class="bg-blue-500 text-white w-full py-1 rounded-full hover:bg-blue-600">Create Post</button>
         </div>
         <div class="bg-white rounded-md shadow-md p-4">
-            <h2 class="text-lg font-semibold mb-2">Redditlike Rules</h2>
+            <h2 class="text-lg font-semibold mb-2">SocialConnect Rules</h2>
             <ol class="list-decimal list-inside text-sm">
                 <li class="mb-2">Be respectful to others</li>
                 <li class="mb-2">No spam or self-promotion</li>
@@ -75,7 +76,7 @@
 
 <footer class="bg-white mt-8 py-4 border-t border-gray-300">
     <div class="container mx-auto text-center text-sm text-gray-500">
-        <p>&copy; 2024 Redditlike. All rights reserved.</p>
+        <p>&copy; 2024 SocialConnect. All rights reserved.</p>
     </div>
 </footer>
 </body>

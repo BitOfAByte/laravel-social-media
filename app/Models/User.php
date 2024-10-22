@@ -83,4 +83,9 @@ class User extends Model implements Authenticatable
     {
         return 'password';
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }
