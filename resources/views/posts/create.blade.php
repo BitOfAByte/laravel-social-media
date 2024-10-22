@@ -34,10 +34,6 @@
             <label for="content" class="form-label">Content</label>
             <textarea class="form-control" id="content" name="content" rows="5" required>{{ old('content') }}</textarea>
         </div>
-        <div class="mb-3">
-            <label for="userId" class="form-label">User ID</label>
-            <input type="number" class="form-control" id="userId" name="userId" value="{{ old('userId') }}" required>
-        </div>
         <button type="submit" class="btn btn-primary">Create</button>
     </form>
 </div>

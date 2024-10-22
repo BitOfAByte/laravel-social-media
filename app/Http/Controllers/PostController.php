@@ -24,13 +24,12 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'userId' => 'required|integer|exists:users,id',
         ]);
 
         Post::create([
             'title' => $request->title,
             'content' => $request->content,
-            'user_id' => $request->userId,
+            'user_id' => Auth::id(),
         ]);
 
         return redirect()->route('home')->with('success', 'Post created successfully.');

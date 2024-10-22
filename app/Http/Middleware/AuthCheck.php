@@ -15,9 +15,15 @@ class AuthCheck
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
-    {
-        $request->merge(['isLoggedIn' => Auth::check()]);
-        return $next($request);
+
+    // app/Http/Middleware/AuthCheck.php
+
+public function handle(Request $request, Closure $next)
+{
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('message', 'Please login');
     }
+
+    return $next($request);
+}
 }
