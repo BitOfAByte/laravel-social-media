@@ -33,6 +33,12 @@
 </nav>
 
 <main class="container mx-auto mt-8 flex">
+    <div class="w-1/3 pl-4">
+        <div class="bg-white rounded-md shadow-md p-4 mb-8"> <!-- Increased margin-bottom -->
+            <h2 class="text-lg font-semibold mb-2">About {{ $user->username }}</h2>
+            <p class="text-sm mb-4">{{ $user->bio }}</p>
+        </div>
+    </div>
     <div class="w-2/3 pr-4">
         <div class="bg-white rounded-md shadow-md mb-4 p-4">
             <div class="flex items-center mb-4">
@@ -40,6 +46,23 @@
                 <div>
                     <h2 class="text-2xl font-semibold">{{ $user->username }}</h2>
                     <p class="text-sm text-gray-500">Joined {{ $user->created_at->diffForHumans() }}</p>
+                </div>
+                <div class="ml-auto">
+                    @auth
+                        @if(Auth::user()->id !== $user->id)
+                            <form action="{{ route('follow', $user->id) }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" class="bg-green-500 text-white px-4 py-1 rounded-full hover:bg-green-600">Follow</button>
+                            </form>
+                        @else
+                            <a href="{{ route('users.edit', $user->id) }}" class="bg-yellow-500 text-white px-4 py-1 rounded-full hover:bg-yellow-600">Edit Profile</a>
+                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 text-white px-4 py-1 rounded-full hover:bg-red-600">Delete Profile</button>
+                            </form>
+                        @endif
+                    @endauth
                 </div>
             </div>
             <p class="text-gray-700">{{ $user->bio }}</p>
@@ -61,12 +84,6 @@
             @else
                 <p>No posts available.</p>
             @endif
-        </div>
-    </div>
-    <div class="w-1/3 pl-4">
-        <div class="bg-white rounded-md shadow-md p-4 mb-4">
-            <h2 class="text-lg font-semibold mb-2">About {{ $user->username }}</h2>
-            <p class="text-sm mb-4">{{ $user->bio }}</p>
         </div>
     </div>
 </main>
