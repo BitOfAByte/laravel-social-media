@@ -18,7 +18,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('users.update', $user->id) }}" method="POST">
+    <form action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -40,6 +40,10 @@
         <div class="mb-3">
             <label for="bio" class="form-label">Bio</label>
             <textarea class="form-control" id="bio" name="bio" rows="3">{{ old('bio', $user->bio) }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="profile_picture" class="form-label">Profile Picture</label>
+            <input type="file" class="form-control" id="profile_picture" name="profile_picture">
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>

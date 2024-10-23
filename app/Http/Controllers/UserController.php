@@ -42,7 +42,6 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-
     public function update(Request $request, $id)
 {
     $user = User::find($id);
@@ -55,7 +54,8 @@ class UserController extends Controller
         'username' => 'required|string|max:255|unique:users,username,' . $user->id,
         'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         'password' => 'nullable|string|min:8|confirmed',
-        'bio' => 'nullable|string|max:255', // Corrected validation rule
+        'bio' => 'nullable|string|max:255',
+        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation for profile picture
     ]);
 
     if ($request->filled('password')) {
@@ -72,6 +72,12 @@ class UserController extends Controller
 
     if ($request->filled('bio')) {
         $user->bio = $request->bio;
+    }
+
+    if ($request->hasFile('profile_picture')) {
+        $file = $request->file('profile_picture');
+        $path = $file->store('profile_pictures', 'public');
+        $user->profile_picture = $path;
     }
 
     $user->save();

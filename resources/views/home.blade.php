@@ -20,7 +20,7 @@
         <div class="flex items-center">
             @auth
                 <span class="mr-4">Welcome, {{ Auth::user()->username }}</span>
-                <img src="{{ Auth::user()->profile_picture }}" alt="Profile Picture" class="w-8 h-8 rounded-full mr-2">
+                <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'default-profile.png' }}" alt="Profile Picture" class="w-16 h-16 rounded-full mr-4">
                 <a href="{{ route('user.profile', ['username' => Auth::user()->username]) }}" class="bg-green-500 text-white px-4 py-1 rounded-full hover:bg-green-600 mr-2">Profile</a>
 
                 <!-- Notification Bell -->
