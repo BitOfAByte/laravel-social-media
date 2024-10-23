@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\UpdootController;
 use App\Http\Middleware\AuthCheck;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -40,4 +41,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     Route::get('/notifications/count', [NotificationController::class, 'getUnreadCount']);
+});
+
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::post('/posts/{id}/like', [UpdootController::class, 'upvote'])->name('posts.like');
+    Route::post('/posts/{id}/dislike', [UpdootController::class, 'downvote'])->name('posts.dislike');
 });

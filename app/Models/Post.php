@@ -17,4 +17,14 @@ class Post extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+
+    public function updoots()
+    {
+        return $this->hasMany(Updoot::class);
+    }
+
+    public function userVote()
+    {
+        return $this->hasOne(Updoot::class)->where('user_id', auth()->id());
+    }
 }
