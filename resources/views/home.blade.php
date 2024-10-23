@@ -22,6 +22,26 @@
                 <span class="mr-4">Welcome, {{ Auth::user()->username }}</span>
                 <img src="{{ Auth::user()->profile_picture }}" alt="Profile Picture" class="w-8 h-8 rounded-full mr-2">
                 <a href="{{ route('user.profile', ['username' => Auth::user()->username]) }}" class="bg-green-500 text-white px-4 py-1 rounded-full hover:bg-green-600 mr-2">Profile</a>
+
+                <!-- Notification Bell -->
+                <div class="relative">
+                    <button id="notification-bell" class="relative">
+                        <i class="fas fa-bell text-gray-500 hover:text-gray-700"></i>
+                        @if(Auth::user()->unreadNotifications->count() > 0)
+                            <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
+                        @endif
+                    </button>
+                    <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-20">
+                        <div class="py-2">
+                            @forelse(Auth::user()->unreadNotifications as $notification)
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ $notification->data['message'] }}</a>
+                            @empty
+                                <p class="px-4 py-2 text-sm text-gray-700">No new notifications</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="bg-blue-500 text-white px-4 py-1 rounded-full hover:bg-blue-600">Log Out</button>
@@ -79,5 +99,22 @@
         <p>&copy; 2024 SocialConnect. All rights reserved.</p>
     </div>
 </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const bell = document.getElementById('notification-bell');
+        const dropdown = document.getElementById('notification-dropdown');
+
+        bell.addEventListener('click', function () {
+            dropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!bell.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    });
+</script>
 </body>
 </html>

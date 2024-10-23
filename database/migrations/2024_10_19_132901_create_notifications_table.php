@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->text('message');
             $table->dateTime('sent_at');
+            $table->string('notifiable_type');
+            $table->timestamp('read_at')->nullable();
+            $table->unsignedBigInteger('notifiable_id');
             $table->timestamps();
         });
     }
