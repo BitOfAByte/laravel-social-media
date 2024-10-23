@@ -1,3 +1,4 @@
+// database/migrations/2024_10_19_132900_create_follows_table.php
 <?php
 
 use Illuminate\Database\Migrations\Migration;

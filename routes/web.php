@@ -39,4 +39,5 @@ Route::post('/register', [AuthController::class, 'register'])->middleware('guest
 Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::get('/notifications/count', [NotificationController::class, 'getUnreadCount']);
 });

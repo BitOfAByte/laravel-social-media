@@ -1,3 +1,4 @@
+// database/migrations/2024_10_19_132901_create_notifications_table.php
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -15,9 +16,9 @@ return new class extends Migration
             $table->id();
             $table->text('message');
             $table->dateTime('sent_at');
-            $table->string('notifiable_type');
+            $table->string('notifiable_type')->default("Message");
             $table->timestamp('read_at')->nullable();
-            $table->unsignedBigInteger('notifiable_id');
+            $table->foreignId('notification_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

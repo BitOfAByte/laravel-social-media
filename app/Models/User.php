@@ -115,4 +115,22 @@ class User extends Model implements Authenticatable
     {
         return $this->followers()->count();
     }
+
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class, 'user_notifications')
+            ->withPivot('read_status')
+            ->withTimestamps();
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()
+            ->wherePivot('read_status', 'unread');
+    }
+
+    protected $casts = [
+        'sent_at' => 'datetime',
+        'read_at' => 'datetime'
+    ];
 }

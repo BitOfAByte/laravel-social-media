@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -106,19 +107,18 @@ class UserController extends Controller
     }
 
 
+    // app/Http/Controllers/UserController.php
 
     public function follow($id)
-{
-    $userToFollow = User::find($id);
+    {
+        $follower = Auth::user();
+        $user = User::findOrFail($id);
 
-    if (!$userToFollow) {
-        return redirect()->route('home')->with('error', 'User not found.');
+        $follower->follows()->attach($user->id);
+
+        // Create follow notification
+        app(NotificationController::class)->createFollowNotification($user, $follower);
+
+        return back()->with('success', 'You are now following ' . $user->username);
     }
-
-    $user = auth()->user();
-    $user->follows()->attach($userToFollow->id);
-
-    return redirect()->route('user.profile', $userToFollow->username)->with('success', 'User followed successfully.');
-
-}
 }
