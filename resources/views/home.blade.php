@@ -80,6 +80,7 @@
     <div class="w-2/3 pr-4">
         @foreach ($posts as $post)
             <div class="bg-white rounded-md shadow-md mb-4 flex" data-post-id="{{ $post->id }}">
+
                 <div class="w-10 bg-gray-100 rounded-l-md flex flex-col items-center py-2">
                     @auth
                         <form action="{{ route('posts.like', $post->id) }}" method="POST"
@@ -115,7 +116,22 @@
                 </div>
                 <!-- Rest of the post content remains the same -->
                 <div class="p-4 flex-grow">
-                    <!-- ... existing post content ... -->
+                    <div class="text-xs text-gray-500 mb-1">
+                        Posted by {{ $post->user->username }} {{ $post->created_at->diffForHumans() }}
+                    </div>
+                    <h2 class="text-lg font-semibold mb-2">{{ $post->title }}</h2>
+                    <p class="text-sm text-gray-700">{{ $post->content }}</p>
+                    <div class="text-sm text-gray-500 mt-2">
+                        <span class="mr-4">
+                            <i class="far fa-comment"></i> {{ $post->comments }} comments
+                        </span>
+                        <span class="mr-4">
+                            <i class="fas fa-share"></i> Share
+                        </span>
+                        <span>
+                            <i class="far fa-bookmark"></i> Save
+                        </span>
+                    </div>
                 </div>
             </div>
         @endforeach
