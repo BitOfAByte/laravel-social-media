@@ -40,6 +40,7 @@
                 <div>
                     <h2 class="text-2xl font-semibold">{{ $user->username }}</h2>
                     <p class="text-sm text-gray-500">Joined {{ $user->created_at->diffForHumans() }}</p>
+                    <p class="text-sm text-gray-500">{{ $user->getFollowerCount() }} followers</p>
                 </div>
                 <div class="ml-auto">
                     @auth
@@ -82,6 +83,12 @@
             @else
                 <p>No posts available.</p>
             @endif
+        </div>
+    </div>
+    <div class="w-1/3 pl-4">
+        <div class="bg-white rounded-md shadow-md p-4 mb-8">
+            <h2 class="text-lg font-semibold mb-2">About {{ $user->username }}</h2>
+            <p class="text-sm mb-4">{{ $user->bio }}</p>
         </div>
     </div>
 </main>

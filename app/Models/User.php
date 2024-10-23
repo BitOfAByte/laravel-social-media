@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Model implements Authenticatable
@@ -89,14 +90,29 @@ class User extends Model implements Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    /**
+     * Get the users that this user follows
+     */
     public function follows()
     {
         return $this->belongsToMany(User::class, 'follows', 'user_id', 'followed_user_id');
     }
 
-
     public function isFollowing($userId)
     {
         return $this->follows()->where('followed_user_id', $userId)->exists();
+    }
+
+    /**
+     * Get the users that follow this user
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'follows', 'followed_user_id', 'user_id');
+    }
+
+    public function getFollowerCount(): int
+    {
+        return $this->followers()->count();
     }
 }
