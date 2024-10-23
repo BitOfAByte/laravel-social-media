@@ -21,10 +21,7 @@
             @auth
                 <span class="mr-4">Welcome, {{ Auth::user()->username }}</span>
                 <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : 'default-profile.png' }}" alt="Profile Picture" class="w-16 h-16 rounded-full mr-4">
-                <a href="{{ route('user.profile', ['username' => Auth::user()->username]) }}" class="bg-green-500 text-white px-4 py-1 rounded-full hover:bg-green-600 mr-2">Profile</a>
-
-                <!-- Notification Bell -->
-                <div class="relative">
+                <div class="relative mr-4">
                     <button id="notification-bell" class="relative">
                         <i class="fas fa-bell text-gray-500 hover:text-gray-700"></i>
                         @if(Auth::user()->unreadNotifications->count() > 0)
@@ -41,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-
+                <a href="{{ route('user.profile', ['username' => Auth::user()->username]) }}" class="bg-green-500 text-white px-4 py-1 rounded-full hover:bg-green-600 mr-2">Profile</a>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="bg-blue-500 text-white px-4 py-1 rounded-full hover:bg-blue-600">Log Out</button>
