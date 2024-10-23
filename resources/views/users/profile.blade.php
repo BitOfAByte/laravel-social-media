@@ -10,7 +10,7 @@
 <body class="bg-gray-200">
 <nav class="bg-white border-b border-gray-300">
     <div class="container mx-auto px-4 py-2 flex items-center justify-between">
-        <a href="{{ route('home') }}" class="text-red-500 text-3xl font-bold">redditlike</a>
+        <a href="{{ route('home') }}" class="text-red-500 text-3xl font-bold">SocialConnect</a>
         <div class="relative">
             <form action="{{ route('search.user') }}" method="GET">
                 <input type="text" name="query" placeholder="Search for a user" class="bg-gray-100 rounded-full py-1 px-4 w-64">
