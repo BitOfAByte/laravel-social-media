@@ -34,7 +34,7 @@
 
 <main class="container mx-auto mt-8 flex">
     <div class="w-1/3 pl-4">
-        <div class="bg-white rounded-md shadow-md p-4 mb-8"> <!-- Increased margin-bottom -->
+        <div class="bg-white rounded-md shadow-md p-4 mb-8">
             <h2 class="text-lg font-semibold mb-2">About {{ $user->username }}</h2>
             <p class="text-sm mb-4">{{ $user->bio }}</p>
         </div>
@@ -50,10 +50,14 @@
                 <div class="ml-auto">
                     @auth
                         @if(Auth::user()->id !== $user->id)
-                            <form action="{{ route('follow', $user->id) }}" method="POST" class="inline">
-                                @csrf
-                                <button type="submit" class="bg-green-500 text-white px-4 py-1 rounded-full hover:bg-green-600">Follow</button>
-                            </form>
+                            @if(Auth::user()->isFollowing($user->id))
+                                <button class="bg-gray-500 text-white px-4 py-1 rounded-full" disabled>Following</button>
+                            @else
+                                <form action="{{ route('follow', $user->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="bg-green-500 text-white px-4 py-1 rounded-full hover:bg-green-600">Follow</button>
+                                </form>
+                            @endif
                         @else
                             <a href="{{ route('users.edit', $user->id) }}" class="bg-yellow-500 text-white px-4 py-1 rounded-full hover:bg-yellow-600">Edit Profile</a>
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
