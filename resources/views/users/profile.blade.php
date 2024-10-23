@@ -33,12 +33,6 @@
 </nav>
 
 <main class="container mx-auto mt-8 flex">
-    <div class="w-1/3 pl-4">
-        <div class="bg-white rounded-md shadow-md p-4 mb-8">
-            <h2 class="text-lg font-semibold mb-2">About {{ $user->username }}</h2>
-            <p class="text-sm mb-4">{{ $user->bio }}</p>
-        </div>
-    </div>
     <div class="w-2/3 pr-4">
         <div class="bg-white rounded-md shadow-md mb-4 p-4">
             <div class="flex items-center mb-4">

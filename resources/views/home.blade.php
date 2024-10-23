@@ -75,7 +75,7 @@
     </div>
     <div class="w-1/3 pl-4">
         <div class="bg-white rounded-md shadow-md p-4 mb-4">
-            <h2 class="text-lg font-semibold mb-2">About Community</h2>
+y            <h2 class="text-lg font-semibold mb-2">About SocialConnect</h2>
             <p class="text-sm mb-4">Welcome to SocialConnect, a place to share and discuss interesting topics!</p>
             <button onclick="window.location.href='{{ route('posts.create') }}'" class="bg-blue-500 text-white w-full py-1 rounded-full hover:bg-blue-600">Create Post</button>
         </div>
