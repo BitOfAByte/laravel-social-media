@@ -44,6 +44,7 @@ Route::middleware([AuthCheck::class])->group(function () {
     Route::get('/notifications/count', [NotificationController::class, 'getUnreadCount']);
 });
 
+Route::get("/posts/{postId}/comments", [CommentController::class, 'index'])->name('comments.index');
 
 Route::middleware([AuthCheck::class])->group(function () {
 

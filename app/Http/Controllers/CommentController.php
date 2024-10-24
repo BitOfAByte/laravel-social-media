@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+
+    public function index($postId)
+    {
+        $post = Post::with('comments')->findOrFail($postId);
+        return view('comments.index', compact('post'));
+    }
+
     /**
      * Store a newly created comment in storage.
      */

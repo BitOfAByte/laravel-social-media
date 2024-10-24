@@ -29,4 +29,8 @@ class Post extends Model
     {
         return $this->hasOne(Updoot::class)->where('user_id', auth()->id());
     }
+
+    public function comments() {
+        return $this->hasMany(PostComments::class);
+    }
 }
