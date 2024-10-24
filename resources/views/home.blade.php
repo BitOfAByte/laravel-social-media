@@ -9,6 +9,61 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <script src="{{ asset('js/notification.js') }}" defer></script>
     <script src="{{ asset('js/voting.js') }}" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const commentButtons = document.querySelectorAll('.comment-btn');
+            const modal = document.getElementById('comment-modal');
+            const closeModal = document.getElementById('close-modal');
+            const postIdInput = document.getElementById('post-id');
+            const commentForm = document.getElementById('comment-form');
+
+            commentButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    postIdInput.value = this.dataset.postId;
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            closeModal.addEventListener('click', function () {
+                modal.classList.add('hidden');
+            });
+
+            commentForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const postId = postIdInput.value;
+                const comment = document.getElementById('comment').value;
+
+                fetch(`/posts/${postId}/comments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ comment })
+                })
+                    .then(response => response.text()) // Change to response.text() to log the raw response
+                    .then(text => {
+                        console.log(text); // Log the raw response text
+                        try {
+                            const data = JSON.parse(text); // Parse the response text as JSON
+                            if (data.message === 'Comment added successfully.') {
+                                alert('Comment added successfully.');
+                                modal.classList.add('hidden');
+                            } else {
+                                alert('Failed to add comment.');
+                            }
+                        } catch (error) {
+                            console.error('Error parsing JSON:', error);
+                            alert('An error occurred while processing the response.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred.');
+                    });
+            });
+        });
+    </script>
 </head>
 <body class="bg-gray-200">
 <nav class="bg-white border-b border-gray-300">
@@ -123,7 +178,7 @@
                     <p class="text-sm text-gray-700">{{ $post->content }}</p>
                     <div class="text-sm text-gray-500 mt-2">
                         <span class="mr-4">
-                            <i class="far fa-comment"></i> {{ $post->comments }} comments
+                            <i class="far fa-comment comment-btn" data-post-id="{{ $post->id }}"></i> {{ $post->comments }} comments
                         </span>
                         <span class="mr-4">
                             <i class="fas fa-share"></i> Share
@@ -156,6 +211,31 @@
         </div>
     </div>
 </main>
+
+<!-- Comment Modal -->
+<div id="comment-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg w-1/3">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-lg font-semibold">Add a Comment</h3>
+            <button id="close-modal" class="text-gray-500 hover:text-gray-700">&times;</button>
+        </div>
+        <div class="p-4">
+            <form id="comment-form">
+                @csrf
+                <input type="hidden" id="post-id">
+                <div class="mb-4">
+                    <label for="comment" class="block text-gray-700 text-sm font-bold mb-2">Comment</label>
+                    <textarea id="comment" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <footer class="bg-white mt-8 py-4 border-t border-gray-300">
     <div class="container mx-auto text-center text-sm text-gray-500">

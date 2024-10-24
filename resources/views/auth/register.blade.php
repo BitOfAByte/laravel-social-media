@@ -4,7 +4,7 @@
     <div class="container mx-auto mt-8">
         <div class="max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-md">
             <div class="px-6 py-4">
-                <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Sign up for Redditlike</h2>
+                <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Sign up for SocialConnect</h2>
                 <form action="{{ route('register') }}" method="POST">
                     @csrf
                     <div class="mb-4">

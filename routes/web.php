@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UpdootController;
 use App\Http\Middleware\AuthCheck;
@@ -37,15 +38,21 @@ Route::post('/register', [AuthController::class, 'register'])->middleware('guest
 
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware([AuthCheck::class])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     Route::get('/notifications/count', [NotificationController::class, 'getUnreadCount']);
 });
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware([AuthCheck::class])->group(function () {
 
     Route::post('/posts/{id}/like', [UpdootController::class, 'upvote'])->name('posts.like');
     Route::post('/posts/{id}/dislike', [UpdootController::class, 'downvote'])->name('posts.dislike');
+
+    Route::post('/posts/{postId}/comments', [CommentController::class, 'store'])->name('comments.store');
+
+    Route::put('/comments/{commentId}', [CommentController::class, 'update'])->name('comments.update');
+
+    Route::delete('/comments/{commentId}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
