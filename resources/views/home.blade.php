@@ -135,7 +135,35 @@
     <div class="w-2/3 pr-4">
         @foreach ($posts as $post)
             <div class="bg-white rounded-md shadow-md mb-4 flex" data-post-id="{{ $post->id }}">
-                <!-- Post content here -->
+                <div class="w-10 bg-gray-100 rounded-l-md flex flex-col items-center py-2">
+                    @auth()
+                    <form action="{{ route('posts.like', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="upvote">
+                        @csrf
+                        <button type="submit" class="upvote-btn {{ $post->userVote && $post->userVote->value === 1 ? 'text-orange-500' : 'text-gray-400' }} hover:text-orange-500">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                    </form>
+                    <span class="text-sm font-bold my-1 vote-count">
+                        {{ $post->updoots->sum('value') }}
+                    </span>
+                    <form action="{{ route('posts.dislike', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="downvote">
+                        @csrf
+                        <button type="submit" class="downvote-btn {{ $post->userVote && $post->userVote->value === -1 ? 'text-purple-500' : 'text-gray-400' }} hover:text-purple-500">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                    </form>
+                    @else
+                        <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-arrow-up"></i>
+                        </a>
+                        <span class="text-sm font-bold my-1">
+                            {{ $post->updoots->sum('value') }}
+                        </span>
+                        <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-arrow-down"></i>
+                        </a>
+                    @endauth
+                </div>
                 <div class="p-4 flex-grow">
                     <div class="text-xs text-gray-500 mb-1">
                         Posted by {{ $post->user->username }} {{ $post->created_at->diffForHumans() }}
