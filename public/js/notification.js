@@ -1,73 +1,75 @@
+// notification.js
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize notification elements
     const notificationBell = document.getElementById('notification-bell');
     const notificationDropdown = document.getElementById('notification-dropdown');
-    const notificationList = document.getElementById('notification-list');
     const notificationBadge = document.getElementById('notification-badge');
+    const notificationList = document.getElementById('notification-list');
 
-    // Toggle notification dropdown
-    notificationBell.addEventListener('click', function(e) {
-        e.stopPropagation();
-        notificationDropdown.classList.toggle('hidden');
-    });
+    if (notificationBell) {
+        // Toggle dropdown visibility
+        notificationBell.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('hidden');
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!notificationDropdown.contains(e.target) && e.target !== notificationBell) {
-            notificationDropdown.classList.add('hidden');
-        }
-    });
+            // Mark notifications as read when dropdown is opened
+            if (!notificationDropdown.classList.contains('hidden')) {
+                const unreadNotifications = document.querySelectorAll('.notification-item[data-read-status="unread"]');
+                unreadNotifications.forEach(notification => {
+                    markNotificationAsRead(notification.dataset.notificationId);
+                });
+            }
+        });
 
-    // Handle notification click
-    notificationList.addEventListener('click', function(e) {
-        const notificationItem = e.target.closest('.notification-item');
-        if (notificationItem) {
-            const notificationId = notificationItem.dataset.notificationId;
-            markNotificationAsRead(notificationId, notificationItem);
-        }
-    });
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!notificationDropdown.contains(e.target) && !notificationBell.contains(e.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
+    }
 
-    // Mark notification as read
-    function markNotificationAsRead(notificationId, notificationItem) {
+    // Function to mark notification as read
+    function markNotificationAsRead(notificationId) {
         fetch(`/notifications/${notificationId}/mark-as-read`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    notificationItem.classList.remove('bg-blue-50');
-                    updateNotificationBadge();
+                    // Update UI to reflect read status
+                    const notificationElement = document.querySelector(`.notification-item[data-notification-id="${notificationId}"]`);
+                    if (notificationElement) {
+                        notificationElement.classList.remove('bg-blue-50');
+                        notificationElement.setAttribute('data-read-status', 'read');
+                    }
+
+                    // Update notification count
+                    updateNotificationCount();
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error marking notification as read:', error));
     }
 
-    // Update notification badge count
-    function updateNotificationBadge() {
+    // Function to update notification count
+    function updateNotificationCount() {
         fetch('/notifications/count')
             .then(response => response.json())
             .then(data => {
                 if (data.count > 0) {
-                    if (!notificationBadge) {
-                        const newBadge = document.createElement('span');
-                        newBadge.id = 'notification-badge';
-                        newBadge.className = 'absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full';
-                        newBadge.textContent = data.count;
-                        notificationBell.appendChild(newBadge);
-                    } else {
-                        notificationBadge.textContent = data.count;
-                        notificationBadge.classList.remove('hidden');
-                    }
-                } else if (notificationBadge) {
+                    notificationBadge.textContent = data.count;
+                    notificationBadge.classList.remove('hidden');
+                } else {
                     notificationBadge.classList.add('hidden');
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error updating notification count:', error));
     }
 
     // Poll for new notifications every 30 seconds
-    setInterval(updateNotificationBadge, 30000);
+    setInterval(updateNotificationCount, 30000);
 });
