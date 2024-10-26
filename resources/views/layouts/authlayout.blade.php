@@ -6,11 +6,12 @@
     <title>Redditlike</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <script src="{{ asset('js/confirmPassword.js') }}" defer></script>
 </head>
 <body class="bg-gray-200">
 <nav class="bg-white border-b border-gray-300">
     <div class="container mx-auto px-4 py-2 flex items-center justify-between">
-        <a href="{{ route('home') }}" class="text-red-500 text-3xl font-bold">redditlike</a>
+        <a href="{{ route('home') }}" class="text-red-500 text-3xl font-bold">SocialConnect</a>
         <div class="relative">
             <input type="text" placeholder="Search Redditlike" class="bg-gray-100 rounded-full py-1 px-4 w-64">
             <i class="fas fa-search absolute right-3 top-2 text-gray-400"></i>
