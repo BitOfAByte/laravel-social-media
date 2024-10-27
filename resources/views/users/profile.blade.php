@@ -6,6 +6,31 @@
     <title>{{ $user->username }}'s Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .tab-link {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 5px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            cursor: pointer;
+        }
+        .tab-link.active {
+            background-color: #fff;
+            border-bottom: 2px solid #007bff;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
 </head>
 <body class="bg-gray-200">
 <nav class="bg-white border-b border-gray-300">
@@ -66,23 +91,48 @@
             </div>
             <p class="text-gray-700">{{ $user->bio }}</p>
         </div>
+
         <div class="bg-white rounded-md shadow-md p-4">
-            <h2 class="text-lg font-semibold mb-2">Posts by {{ $user->username }}</h2>
-            @if($user->posts && count($user->posts) > 0)
-                @foreach ($user->posts as $post)
-                    <div class="bg-gray-100 rounded-md p-4 mb-4">
-                        <h3 class="text-xl font-semibold">{{ $post->title }}</h3>
-                        <p class="text-gray-700">{{ $post->content }}</p>
-                        <div class="text-sm text-gray-500 mt-2">
-                            <span class="mr-4"><i class="far fa-comment"></i> {{ $post->comments_count }} comments</span>
-                            <span class="mr-4"><i class="fas fa-share"></i> Share</span>
-                            <span><i class="far fa-bookmark"></i> Save</span>
+            <div class="tabs">
+                <button class="tab-link active" data-tab="posts">Posts</button>
+                <button class="tab-link" data-tab="saved-posts">Saved Posts</button>
+            </div>
+            <div id="posts" class="tab-content active">
+                <h2 class="text-lg font-semibold mb-2">Posts by {{ $user->username }}</h2>
+                @if($user->posts && count($user->posts) > 0)
+                    @foreach ($user->posts as $post)
+                        <div class="bg-gray-100 rounded-md p-4 mb-4">
+                            <h3 class="text-xl font-semibold">{{ $post->title }}</h3>
+                            <p class="text-gray-700">{{ $post->content }}</p>
+                            <div class="text-sm text-gray-500 mt-2">
+                                <span class="mr-4"><i class="far fa-comment"></i> {{ $post->comments_count }} comments</span>
+                                <span class="mr-4"><i class="fas fa-share"></i> Share</span>
+                                <span><i class="far fa-bookmark"></i> Save</span>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-            @else
-                <p>No posts available.</p>
-            @endif
+                    @endforeach
+                @else
+                    <p>No posts available.</p>
+                @endif
+            </div>
+            <div id="saved-posts" class="tab-content">
+                <h2 class="text-lg font-semibold mb-2">Saved Posts</h2>
+                @if($user->savedPosts && count($user->savedPosts) > 0)
+                    @foreach ($user->savedPosts as $post)
+                        <div class="bg-gray-100 rounded-md p-4 mb-4">
+                            <h3 class="text-xl font-semibold">{{ $post->title }}</h3>
+                            <p class="text-gray-700">{{ $post->content }}</p>
+                            <div class="text-sm text-gray-500 mt-2">
+                                <span class="mr-4"><i class="far fa-comment"></i> {{ $post->comments_count }} comments</span>
+                                <span class="mr-4"><i class="fas fa-share"></i> Share</span>
+                                <span><i class="far fa-bookmark"></i> Save</span>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <p>No saved posts available.</p>
+                @endif
+            </div>
         </div>
     </div>
     <div class="w-1/3 pl-4">
@@ -98,5 +148,20 @@
         <p>&copy; 2024 SocialConnect. All rights reserved.</p>
     </div>
 </footer>
+
+<script>
+    document.querySelectorAll('.tab-link').forEach(button => {
+        button.addEventListener('click', () => {
+            const tabContent = document.querySelectorAll('.tab-content');
+            tabContent.forEach(content => content.classList.remove('active'));
+
+            document.querySelectorAll('.tab-link').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            const tab = button.getAttribute('data-tab');
+            document.getElementById(tab).classList.add('active');
+        });
+    });
+</script>
 </body>
 </html>

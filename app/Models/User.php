@@ -133,4 +133,10 @@ class User extends Model implements Authenticatable
         'sent_at' => 'datetime',
         'read_at' => 'datetime'
     ];
+
+
+    public function savedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'post_saves', 'user_id', 'post_id');
+    }
 }
