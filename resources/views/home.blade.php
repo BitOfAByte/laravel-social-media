@@ -7,10 +7,10 @@
     <title>SocialConnect</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <script src="{{ asset('js/notification.js') }}" defer></script>
-    <script src="{{ asset('js/voting.js') }}" defer></script>
-    <script src="{{ asset('js/comments.js') }}" defer></script>
-    <script src="{{ asset('js/searchUser.js') }}" defer></script>
+    <script src="{{ asset('js/notification.js') }}" ></script>
+    <script src="{{ asset('js/voting.js') }}" ></script>
+    <script src="{{ asset('js/comments.js') }}" ></script>
+    <script src="{{ asset('js/searchUser.js') }}" ></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.bookmark-btn').forEach(function (button) {
@@ -34,8 +34,13 @@
                             return response.json();
                         })
                         .then(data => {
-                            console.log(data); // Log the response data
-                            this.classList.toggle('text-black');
+                            if (data.saved) {
+                                this.classList.remove('far');
+                                this.classList.add('fas');
+                            } else {
+                                this.classList.remove('fas');
+                                this.classList.add('far');
+                            }
                         })
                         .catch(error => {
                             console.error('Error:', error);
@@ -159,7 +164,7 @@
                             <i class="fas fa-share"></i> Share
                         </span>
                         <span>
-                            <i class="far fa-bookmark bookmark-btn" data-post-id="{{ $post->id }}"></i> Save
+                            <i class="far fa-bookmark bookmark-btn {{ $post->isSavedByUser(Auth::id()) ? 'fas' : 'far' }}" data-post-id="{{ $post->id }}"></i>
                         </span>
                     </div>
                     <!-- Comments section -->

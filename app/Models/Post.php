@@ -33,4 +33,14 @@ class Post extends Model
     public function comments() {
         return $this->hasMany(PostComments::class);
     }
+
+    public function isSavedByUser($userId)
+{
+    return $this->saves()->where('user_id', $userId)->exists();
+}
+
+public function saves()
+{
+    return $this->hasMany(PostSave::class);
+}
 }

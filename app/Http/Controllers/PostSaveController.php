@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PostSave;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostSaveController extends Controller
 {
@@ -19,20 +20,29 @@ class PostSaveController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // In PostSaveController.php
     public function store(Request $request, $postId)
-{
-    $request->validate([
-        'user_id' => 'required|exists:users,id',
-    ]);
+    {
+        $userId = Auth::id();
 
-    $postSave = PostSave::firstOrCreate([
-        'user_id' => $request->user_id,
-        'post_id' => $postId,
-    ]);
+        $exists = PostSave::where('user_id', $userId)
+            ->where('post_id', $postId)
+            ->exists();
 
-    return response()->json($postSave, 201);
-}
+        if ($exists) {
+            PostSave::where('user_id', $userId)
+                ->where('post_id', $postId)
+                ->delete();
+            return response()->json(['saved' => false]);
+        }
 
+        PostSave::create([
+            'user_id' => $userId,
+            'post_id' => $postId
+        ]);
+
+        return response()->json(['saved' => true]);
+    }
     /**
      * Display the specified resource.
      */
