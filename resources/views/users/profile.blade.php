@@ -6,31 +6,7 @@
     <title>{{ $user->username }}'s Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <style>
-        .tab-link {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-right: 5px;
-            background-color: #f1f1f1;
-            border: 1px solid #ccc;
-            border-bottom: none;
-            cursor: pointer;
-        }
-        .tab-link.active {
-            background-color: #fff;
-            border-bottom: 2px solid #007bff;
-            font-weight: bold;
-        }
-        .tab-content {
-            display: none;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-top: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-    </style>
+    <link href="{{ asset('css/profiletabs.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gray-200">
 <nav class="bg-white border-b border-gray-300">
