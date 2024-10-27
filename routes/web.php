@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PostSaveController;
 use App\Http\Controllers\UpdootController;
 use App\Http\Middleware\AuthCheck;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +37,8 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register'])->middleware('guest');;
 
 
-
+Route::resource('post-saves', PostSaveController::class)->middleware('auth');
+Route::post('/posts/{postId}/save', [PostSaveController::class, 'store'])->name('posts.save')->middleware('auth');
 
 Route::middleware([AuthCheck::class])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

@@ -11,6 +11,40 @@
     <script src="{{ asset('js/voting.js') }}" defer></script>
     <script src="{{ asset('js/comments.js') }}" defer></script>
     <script src="{{ asset('js/searchUser.js') }}" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.bookmark-btn').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const postId = this.dataset.postId;
+                    const userId = "{{ Auth::id() }}";
+                    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                    fetch(`/posts/${postId}/save`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token
+                        },
+                        body: JSON.stringify({ user_id: userId })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data); // Log the response data
+                            this.classList.toggle('text-black');
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while saving the post.');
+                        });
+                });
+            });
+        });
+    </script>
 </head>
 <body class="bg-gray-200">
 <nav class="bg-white border-b border-gray-300">
@@ -84,21 +118,21 @@
             <div class="bg-white rounded-md shadow-md mb-4 flex" data-post-id="{{ $post->id }}">
                 <div class="w-10 bg-gray-100 rounded-l-md flex flex-col items-center py-2">
                     @auth()
-                    <form action="{{ route('posts.like', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="upvote">
-                        @csrf
-                        <button type="submit" class="upvote-btn {{ $post->userVote && $post->userVote->value === 1 ? 'text-orange-500' : 'text-gray-400' }} hover:text-orange-500">
-                            <i class="fas fa-arrow-up"></i>
-                        </button>
-                    </form>
-                    <span class="text-sm font-bold my-1 vote-count">
+                        <form action="{{ route('posts.like', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="upvote">
+                            @csrf
+                            <button type="submit" class="upvote-btn {{ $post->userVote && $post->userVote->value === 1 ? 'text-orange-500' : 'text-gray-400' }} hover:text-orange-500">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                        </form>
+                        <span class="text-sm font-bold my-1 vote-count">
                         {{ $post->updoots->sum('value') }}
                     </span>
-                    <form action="{{ route('posts.dislike', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="downvote">
-                        @csrf
-                        <button type="submit" class="downvote-btn {{ $post->userVote && $post->userVote->value === -1 ? 'text-purple-500' : 'text-gray-400' }} hover:text-purple-500">
-                            <i class="fas fa-arrow-down"></i>
-                        </button>
-                    </form>
+                        <form action="{{ route('posts.dislike', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="downvote">
+                            @csrf
+                            <button type="submit" class="downvote-btn {{ $post->userVote && $post->userVote->value === -1 ? 'text-purple-500' : 'text-gray-400' }} hover:text-purple-500">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                        </form>
                     @else
                         <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-600">
                             <i class="fas fa-arrow-up"></i>
@@ -118,15 +152,15 @@
                     <h2 class="text-lg font-semibold mb-2">{{ $post->title }}</h2>
                     <p class="text-sm text-gray-700">{{ $post->content }}</p>
                     <div class="text-sm text-gray-500 mt-2">
-                <span class="mr-4">
-                    <i class="far fa-comment comment-btn" data-post-id="{{ $post->id }}"></i> {{ $post->comments->count() }} comments
-                </span>
                         <span class="mr-4">
-                    <i class="fas fa-share"></i> Share
-                </span>
+                            <i class="far fa-comment comment-btn" data-post-id="{{ $post->id }}"></i> {{ $post->comments->count() }} comments
+                        </span>
+                        <span class="mr-4">
+                            <i class="fas fa-share"></i> Share
+                        </span>
                         <span>
-                    <i class="far fa-bookmark"></i> Save
-                </span>
+                            <i class="far fa-bookmark bookmark-btn" data-post-id="{{ $post->id }}"></i> Save
+                        </span>
                     </div>
                     <!-- Comments section -->
                     <div class="mt-4">
