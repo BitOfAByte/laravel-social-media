@@ -8,7 +8,7 @@ COPY . .
 
 # Install the Composer dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
-
+RUN composer require itsgoingd/clockwork
 # Copy the environment file
 COPY .env.example .env
 
