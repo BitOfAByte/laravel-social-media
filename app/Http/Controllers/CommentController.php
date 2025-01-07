@@ -27,7 +27,10 @@ class CommentController extends Controller
 
         $post = Post::find($postId);
         if (!$post) {
-            return response()->json(['message' => 'Post not found.'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found.'
+            ], 404);
         }
 
         PostComments::create([
@@ -36,7 +39,11 @@ class CommentController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return response()->json(['message' => 'Comment added successfully.']);
+        session()->flash('success', 'Comment added successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Comment added successfully.'
+        ]);
     }
 
     /**
