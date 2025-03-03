@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Post</title>
-    <!-- Link to CSS -->
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -24,7 +23,7 @@
         </div>
     @endif
 
-    <form action="{{ route('posts.store') }}" method="POST">
+    <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
@@ -33,6 +32,10 @@
         <div class="mb-3">
             <label for="content" class="form-label">Content</label>
             <textarea class="form-control" id="content" name="content" rows="5" required>{{ old('content') }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="file" class="form-label">Upload Image</label>
+            <input type="file" class="form-control" id="file" name="file" accept="image/*">
         </div>
         <button type="submit" class="btn btn-primary">Create</button>
     </form>

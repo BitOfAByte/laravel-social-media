@@ -43,4 +43,10 @@ public function saves()
 {
     return $this->hasMany(PostSave::class);
 }
+
+    public function attachments()
+    {
+        return $this->hasMany(PostAttachment::class);
+    }
+
 }

@@ -94,69 +94,83 @@
 <main class="container mx-auto mt-8 flex">
     <div class="w-2/3 pr-4">
         @foreach ($posts as $post)
-            <div class="bg-white rounded-md shadow-md mb-4 flex" data-post-id="{{ $post->id }}">
-                <div class="w-10 bg-gray-100 rounded-l-md flex flex-col items-center py-2">
-                    @auth()
-                        <form action="{{ route('posts.like', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="upvote">
-                            @csrf
-                            <button type="submit" class="upvote-btn {{ $post->userVote && $post->userVote->value === 1 ? 'text-orange-500' : 'text-gray-400' }} hover:text-orange-500">
-                                <i class="fas fa-arrow-up"></i>
-                            </button>
-                        </form>
-                        <span class="text-sm font-bold my-1 vote-count">
+        <div class="bg-white rounded-md shadow-md mb-4 flex" data-post-id="{{ $post->id }}">
+            <div class="w-10 bg-gray-100 rounded-l-md flex flex-col items-center py-2">
+                @auth()
+                <form action="{{ route('posts.like', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="upvote">
+                    @csrf
+                    <button type="submit" class="upvote-btn {{ $post->userVote && $post->userVote->value === 1 ? 'text-orange-500' : 'text-gray-400' }} hover:text-orange-500">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                </form>
+                <span class="text-sm font-bold my-1 vote-count">
                         {{ $post->updoots->sum('value') }}
                     </span>
-                        <form action="{{ route('posts.dislike', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="downvote">
-                            @csrf
-                            <button type="submit" class="downvote-btn {{ $post->userVote && $post->userVote->value === -1 ? 'text-purple-500' : 'text-gray-400' }} hover:text-purple-500">
-                                <i class="fas fa-arrow-down"></i>
-                            </button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-arrow-up"></i>
-                        </a>
-                        <span class="text-sm font-bold my-1">
-                            {{ $post->updoots->sum('value') }}
-                        </span>
-                        <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-arrow-down"></i>
-                        </a>
-                    @endauth
+                <form action="{{ route('posts.dislike', $post->id) }}" method="POST" class="vote-form" data-post-id="{{ $post->id }}" data-vote-type="downvote">
+                    @csrf
+                    <button type="submit" class="downvote-btn {{ $post->userVote && $post->userVote->value === -1 ? 'text-purple-500' : 'text-gray-400' }} hover:text-purple-500">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </form>
+                @else
+                <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-arrow-up"></i>
+                </a>
+                <span class="text-sm font-bold my-1">
+                        {{ $post->updoots->sum('value') }}
+                    </span>
+                <a href="{{ route('login') }}" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-arrow-down"></i>
+                </a>
+                @endauth
+            </div>
+            <div class="p-4 flex-grow">
+                <div class="text-xs text-gray-500 mb-1">
+                    Posted by {{ $post->user->username }} {{ $post->created_at->diffForHumans() }}
                 </div>
-                <div class="p-4 flex-grow">
-                    <div class="text-xs text-gray-500 mb-1">
-                        Posted by {{ $post->user->username }} {{ $post->created_at->diffForHumans() }}
+                <h2 class="text-lg font-semibold mb-2">{{ $post->title }}</h2>
+                <p class="text-sm text-gray-700">{{ $post->content }}</p>
+
+                <!-- ✅ Display Uploaded Images -->
+                @if (!empty($post->attachments) && $post->attachments->count() > 0)
+                <div class="mt-2">
+                    @foreach ($post->attachments as $attachment)
+                    <img src="{{ asset('storage/' . $attachment->file_path) }}"
+                         alt="Post Image"
+                         class="w-64 h-64 object-cover rounded-lg shadow-md mb-2">
+                    @endforeach
+                </div>
+                @endif
+
+                <div class="text-sm text-gray-500 mt-2">
+                    <span class="mr-4">
+                        <i class="far fa-comment comment-btn" data-post-id="{{ $post->id }}"></i>
+                        {{ $post->comments->count() }} comments
+                    </span>
+                    <span class="mr-4">
+                        <i class="fas fa-share"></i> Share
+                    </span>
+                    <span>
+                        <i class="far fa-bookmark bookmark-btn {{ $post->isSavedByUser(Auth::id()) ? 'fas' : 'far' }}" data-post-id="{{ $post->id }}"></i>
+                    </span>
+                </div>
+
+                <!-- Comments section -->
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold mb-2">Comments</h3>
+                    @foreach ($post->comments as $comment)
+                    <div class="comment-item bg-white rounded-lg border border-gray-200 mb-2 p-3">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-1">
+                            <span class="username font-medium">{{ $comment->user->username }}</span>
+                            <span class="dot">•</span>
+                            <span class="timestamp">{{ $comment->created_at->diffForHumans() }}</span>
+                        </div>
+                        <div class="comment-text text-gray-800 mb-2">{{ $comment->comment }}</div>
                     </div>
-                    <h2 class="text-lg font-semibold mb-2">{{ $post->title }}</h2>
-                    <p class="text-sm text-gray-700">{{ $post->content }}</p>
-                    <div class="text-sm text-gray-500 mt-2">
-                        <span class="mr-4">
-                            <i class="far fa-comment comment-btn" data-post-id="{{ $post->id }}"></i> {{ $post->comments->count() }} comments
-                        </span>
-                        <span class="mr-4">
-                            <i class="fas fa-share"></i> Share
-                        </span>
-                        <span>
-                            <i class="far fa-bookmark bookmark-btn {{ $post->isSavedByUser(Auth::id()) ? 'fas' : 'far' }}" data-post-id="{{ $post->id }}"></i>
-                        </span>
-                    </div>
-                    <!-- Comments section -->
-                    <div class="mt-4">
-                        <h3 class="text-lg font-semibold mb-2">Comments</h3>
-                        @foreach ($post->comments as $comment)
-                            <div class="comment-item bg-white rounded-lg border border-gray-200 mb-2 p-3">
-                                <div class="flex items-center space-x-2 text-sm text-gray-500 mb-1">
-                                    <span class="username font-medium">{{ $comment->user->username }}</span>
-                                    <span class="dot">•</span>
-                                    <span class="timestamp">{{ $comment->created_at->diffForHumans() }}</span>
-                                </div>
-                                <div class="comment-text text-gray-800 mb-2">{{ $comment->comment }}</div>
-                            </div>
-                        @endforeach
-                    </div>
+                    @endforeach
                 </div>
             </div>
+        </div>
         @endforeach
     </div>
     <div class="w-1/3 pl-4">
