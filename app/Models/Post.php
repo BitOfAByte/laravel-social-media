@@ -35,9 +35,9 @@ class Post extends Model
     }
 
     public function isSavedByUser($userId)
-{
-    return $this->saves()->where('user_id', $userId)->exists();
-}
+    {
+        return $this->saves()->where('user_id', $userId)->exists();
+    }
 
 public function saves()
 {

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GroupController;
+
 
 Route::get('/', [PostController::class, 'index'])->name('home');
 
@@ -49,7 +51,7 @@ Route::middleware([AuthCheck::class])->group(function () {
 Route::get("/posts/{postId}/comments", [CommentController::class, 'index'])->name('comments.index');
 
 Route::middleware([AuthCheck::class])->group(function () {
-
+    Route::delete('/posts/{post}', 'PostController@destroy')->name('posts.destroy');
     Route::post('/posts/{id}/like', [UpdootController::class, 'upvote'])->name('posts.like');
     Route::post('/posts/{id}/dislike', [UpdootController::class, 'downvote'])->name('posts.dislike');
 
@@ -58,4 +60,21 @@ Route::middleware([AuthCheck::class])->group(function () {
     Route::put('/comments/{commentId}', [CommentController::class, 'update'])->name('comments.update');
 
     Route::delete('/comments/{commentId}', [CommentController::class, 'destroy'])->name('comments.destroy');
+});
+
+
+//group routes:
+
+Route::middleware(AuthCheck::class)->group(function (){
+   Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
+   Route::post('/groups/create', [GroupController::class, 'store'])->name('groups.store');
+   Route::delete('/groups/{id}', [GroupController::class, 'destroy'])->name('groups.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 });
